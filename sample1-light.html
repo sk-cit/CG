@@ -7,7 +7,8 @@
   <!-- three.jsを読み込む(ローカル) -->
   <!-- <script src="./three.js"></script> -->
   <!-- three.jsを読み込む(CDN) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
 
 </head>
 <body>
@@ -27,13 +28,40 @@
   
     // カメラを作成
     var camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
+     // カメラコントローラーを作成
+     const controls = new THREE.OrbitControls(camera, document.body); 
   
     // 箱を作成
     var geometry = new THREE.BoxGeometry(1, 1, 1);
-    var material = new THREE.MeshPhongMaterial({ color: 0x0000ff });
+    var material = new THREE.MeshPhongMaterial({ color: 0xff00ff });
     var box = new THREE.Mesh(geometry, material);
     box.position.z = -5;
     scene.add(box);
+    //円錐を作成
+    var coneGeometry = new THREE.ConeGeometry( 0.5, 1, 4 ); 
+    var coneMaterial = new THREE. MeshStandardMaterial( {color: 0xFF0000} );
+    var cone = new THREE.Mesh( coneGeometry, coneMaterial );
+    cone.position.set( 0, 1, -5 );
+    scene.add( cone );
+    //角柱〜円柱
+    var cylinderGeometry = new THREE.CylinderGeometry( 0.3, 0.5, 1, 8 );
+    var cylinderMaterial = new THREE.MeshPhongMaterial( {color: 0x0000ff} );
+    var cylinder = new THREE.Mesh( cylinderGeometry, cylinderMaterial );
+    cylinder.position.set( 0, -1, -5 );
+    scene.add( cylinder );
+    //ドーナッツ
+    var torusGeometry = new THREE.TorusGeometry( 0.5, 0.2, 6, 12 );
+    var torusMaterial = new THREE. MeshPhongMaterial( { color: 0x0000ff } );
+    var torus = new THREE.Mesh( torusGeometry, torusMaterial );
+    torus.position.set( 0, -1, -5);
+    scene.add( torus );
+
+    // マテリアルを作成
+    //var material = new THREE.MeshBasicMaterial({color: 0x6699FF});
+    // メッシュを作成
+    //var mesh = new THREE.Mesh(geometry, material);
+    // 3D空間にメッシュを追加
+    //scene.add(mesh);
   
     // 平行光源1
     var directionalLight1 = new THREE.DirectionalLight(0xffffff);
@@ -48,13 +76,19 @@
   
     // 初回実行
     var update = function() {
-      requestAnimationFrame(update);
+      //requestAnimationFrame(update);
   
-      // 箱を回転させる
-      box.rotation.x += 0.01;
-      box.rotation.y += 0.01;
+      
   
       renderer.render(scene, camera);
+      //レンダリング
+      requestAnimationFrame(update);
+
+      // 箱を回転させる
+      //box.rotation.x += 0.01;
+      box.rotation.y += 0.01;
+      //cone.rotation.x += 0.01;
+      cone.rotation.y += 0.01;
     };
     update();
   }
