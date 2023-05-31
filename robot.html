@@ -1,0 +1,119 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+  </head>
+<body>
+  <script>
+    // ページの読み込みを待つ
+    window.addEventListener('DOMContentLoaded', init);
+
+    function init() {
+      // サイズを指定
+      const width = 800
+      const height = 600;
+
+      // レンダラーを作成
+      var renderer = new THREE.WebGLRenderer();
+      document.body.appendChild(renderer.domElement);
+      renderer.setSize(width, height);
+
+      // シーンを作成
+      const scene = new THREE.Scene();
+
+      // カメラを作成
+      const camera = new THREE.PerspectiveCamera(45, width / height);
+      // カメラの初期座標を設定
+      camera.position.set(0, 0, 5);
+
+      // カメラコントローラーを作成
+      const controls = new THREE.OrbitControls(camera, document.body); 
+        
+      // 平行光源1
+      var directionalLight1 = new THREE.DirectionalLight(0xffffff);
+      directionalLight1.position.set(2, 2, 2);
+      // シーンに追加
+      scene.add(directionalLight1);
+      // 平行光源2
+      var directionalLight2 = new THREE.DirectionalLight(0x888888);
+      directionalLight2.position.set(-2, -2, 2);
+      // シーンに追加
+      scene.add(directionalLight2);
+
+      // helper
+      /*const gridHelper = new THREE.GridHelper(2,10); // size, step
+      scene.add(gridHelper);
+      const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
+      scene.add(axisHelper);*/
+
+      //頭
+      var headGeometry = new THREE.BoxGeometry(1, 1, 1);
+      var headMaterial = new THREE.MeshPhongMaterial({ color: 0xff00ff });
+      var head = new THREE.Mesh(headGeometry, headMaterial);
+      head.position.z = 0;
+      //scene.add(box);
+      //帽子
+      var coneGeometry = new THREE.ConeGeometry( 0.5, 1, 4 ); 
+      var coneMaterial = new THREE. MeshStandardMaterial( {color: 0xFF0000} );
+      var cone = new THREE.Mesh( coneGeometry, coneMaterial );
+      cone.position.set( 0, 1, 0 );
+      //scene.add( cone );
+      //体
+      var bodyGeometry = new THREE.CylinderGeometry( 0.3, 0.5, 1, 8 );
+      var bodyMaterial = new THREE.MeshPhongMaterial( {color: 0x0000ff} );
+      var body = new THREE.Mesh( bodyGeometry, bodyMaterial );
+      body.position.set( 0, -1, 0 );
+      //scene.add( cylinder );
+      //手
+      var handGeometry = new THREE.TorusGeometry( 0.5, 0.2, 6, 12 );
+      var handMaterial = new THREE. MeshPhongMaterial( { color: 0x0000ff } );
+      var hand = new THREE.Mesh( handGeometry, handMaterial );
+      hand.position.set( 0, -1, 0);
+      //scene.add( torus );
+      //左目
+      var eye_g = new THREE.SphereGeometry( 0.1, 32, 32 );
+      var material_eye = new THREE.MeshPhongMaterial({ color: 0xffffff });
+      var l_eye = new THREE.Mesh( eye_g, material_eye);
+      l_eye.position.set(0.2,0.1,0.5);
+      //右目
+      var r_eye = new THREE.Mesh( eye_g, material_eye);
+      r_eye.position.set(-0.2,0.1,0.5);
+      //口
+      var geometry = new THREE.BoxGeometry(0.5, 0.2, 0.3);
+      var material = new THREE.MeshPhongMaterial({ color: 0xffff00 });
+      var mouth = new THREE.Mesh(geometry, material);
+      mouth.position.set(0,-0.15,0.4);
+      //耳
+      var earGeometry = new THREE.CylinderGeometry( 0.3, 0.3, 1.4, 8 );
+      var earMaterial = new THREE.MeshPhongMaterial( {color: 0x0000ff} );
+      var ear = new THREE.Mesh( earGeometry, earMaterial );
+      ear.position.set( 0, 0, 0 );
+      ear.rotation.z += 1.6;
+
+      //グループ
+      const rob = new THREE.Group();
+      rob.add(head);
+      rob.add(cone);
+      rob.add(body);
+      rob.add(hand);
+      rob.add(l_eye);
+      rob.add(r_eye);
+      rob.add(mouth);
+      rob.add(ear);
+      rob.position.set(0,0,0);
+      scene.add(rob);
+
+      update();
+
+      // 毎フレーム時に実行されるループイベントです
+      function update() {
+        // レンダリング
+        renderer.render(scene, camera);
+        requestAnimationFrame(update);
+        rob.rotation.y += 0.01;
+      }
+    }
+  </script>
+</body>
+</html>
