@@ -49,9 +49,22 @@
 
         // テクスチャー読み込み
         var textureLoader = new THREE.TextureLoader();  
-        var texture = textureLoader.load("earth.png");
+        var texture = textureLoader.load("earth.jpg");
         var mat = new THREE.MeshPhongMaterial();
         mat.map = texture;
+
+        var textureLoader = new THREE.TextureLoader();  
+        var texture = textureLoader.load("universe.jpg");
+        var universe = new THREE.MeshPhongMaterial();
+        universe.map = texture;
+
+        // 平面を作成
+        var geometry = new THREE.PlaneGeometry( 1, 2, 3 );
+        //var material = new THREE.MeshPhongMaterial( {color: 0x0000ff, side: THREE.DoubleSide} );
+        //var plane = new THREE.Mesh( geometry, material );
+        var background = new THREE.Mesh(geometry1, universe);
+        background.position.z = -10; //位置を指定
+        scene.add(background);
 
         // 箱を作成
         var geometry1 = new THREE.BoxGeometry(0.8, 0.8, 0.8);
