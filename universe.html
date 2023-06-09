@@ -59,12 +59,18 @@
         universe.map = texture;
 
         // 平面を作成
-        var geometry = new THREE.PlaneGeometry( 20, 20, 3 );
-        //var material = new THREE.MeshPhongMaterial( {color: 0x0000ff, side: THREE.DoubleSide} );
-        //var plane = new THREE.Mesh( geometry, material );
-        var background = new THREE.Mesh(geometry, universe);
+        /*var geometry = new THREE.PlaneGeometry( 20, 20, 3 );
+        var material = new THREE.MeshPhongMaterial( {color: 0x0000ff, side: THREE.DoubleSide} );
+        var plane = new THREE.Mesh( geometry, material );
+        var background = new THREE.Mesh(geometry, plane);
         background.position.z = -5; //位置を指定
-        scene.add(background);
+        scene.add(background);*/
+
+        const geometry = new THREE.PlaneGeometry( 5, 20, 32 );
+        const material = new THREE.MeshBasicMaterial( {color: 0xFF0000, side: THREE.DoubleSide} );
+        const plane = new THREE.Mesh( geometry, universe );
+        plane.position.z = -5; //位置を指定
+        scene.add( plane );
 
         //var geo = new THREE.PlaneGeometry( 20, 20, 3 );
         //var material = new THREE.MeshPhongMaterial( {color: 0x0000ff, side: THREE.DoubleSide} );
