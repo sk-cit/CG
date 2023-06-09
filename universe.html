@@ -59,12 +59,19 @@
         universe.map = texture;
 
         // 平面を作成
-        var geometry = new THREE.PlaneGeometry( 1, 2, 3 );
+        var geometry = new THREE.PlaneGeometry( 20, 20, 3 );
         //var material = new THREE.MeshPhongMaterial( {color: 0x0000ff, side: THREE.DoubleSide} );
         //var plane = new THREE.Mesh( geometry, material );
-        var background = new THREE.Mesh(geometry1, universe);
-        background.position.z = -10; //位置を指定
+        var background = new THREE.Mesh(geometry, universe);
+        background.position.z = -5; //位置を指定
         scene.add(background);
+
+        //var geo = new THREE.PlaneGeometry( 20, 20, 3 );
+        //var material = new THREE.MeshPhongMaterial( {color: 0x0000ff, side: THREE.DoubleSide} );
+        //var plane = new THREE.Mesh( geometry, material );
+        //var plane = new THREE.Mesh(geo, material);
+        //plane.position.z = -5;
+        //scene.add( plane );
 
         // 箱を作成
         var geometry1 = new THREE.BoxGeometry(0.8, 0.8, 0.8);
@@ -112,5 +119,5 @@
 </body>
 <br>
 <h2>使用テクスチャ</h2>
-<p><a href="https://jp.freepik.com/free-vector/earth-planet-on-transparent-with-earth-texture-map_16460019.htm">著作者：brgfx／出典：Freepik</a></p>
+
 </html>
