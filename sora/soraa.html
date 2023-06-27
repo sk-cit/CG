@@ -5,8 +5,8 @@
     <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
   </head>
 <body>
- <h1>森を作成</h1>
- ループで２０本の気を作った<br>
+ <h1>空を飛ぶ飛行機を作成</h1>
+ ビルボードを使って雲を再現した。<br>
  <script>
       // ページの読み込みを待つ
       window.addEventListener('DOMContentLoaded', init);
@@ -45,22 +45,6 @@
         directionalLight2.position.set(-10, -10, 10);
         // シーンに追加
         scene.add(directionalLight2);
-
-
-
-        // テクスチャー読み込み
-        var ktextureLoader = new THREE.TextureLoader();  
-        var ktexture0 = ktextureLoader.load("sora.jpg");
-        var mat0 = new THREE.MeshLambertMaterial();
-        mat0.map = ktexture0;
-
-
-        var kgeometry = new THREE.PlaneGeometry( 20, 20, 32 );
-        var plane = new THREE.Mesh( kgeometry, mat0 );
-        plane.position.y = -4;
-        scene.add( plane );
-
-        plane.rotation.x += 1.57;
 
         //hikouki
         var kitaiG = new THREE.CylinderGeometry(0.3,0.33,2,32);
@@ -102,8 +86,8 @@
         var texture = textureLoader.load("kumo.png");
         const material = new THREE.SpriteMaterial({ map: texture,});
 
-        // 森を作成
-        for (let i = 0; i < 20; i++) {
+        // 雲を作成
+        for (let i = 0; i < 40; i++) {
             const sprite = new THREE.Sprite(material);
             // ランダムな座標に配置
             sprite.position.x = 15 * (Math.random() - 0.5);
@@ -124,7 +108,7 @@
             renderer.render(scene, camera);
             requestAnimationFrame(update);
 
-            //hikouki idou
+            //飛行機の移動
             if(hikouki.position.z > 7){
                 hikouki.position.z = -7;
             }
