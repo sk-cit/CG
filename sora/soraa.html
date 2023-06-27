@@ -52,7 +52,19 @@
         const axisHelper = new THREE.AxisHelper(2); //軸の長さ　X：赤、Y：緑、z：青
         scene.add(axisHelper);
 
+        // 木テクスチャー読み込み
+        var ktextureLoader = new THREE.TextureLoader();  
+        var texture0 = ktextureLoader.load("sora.jpg");
+        // 板ポリ左用
+        var mat0 = new THREE.MeshLambertMaterial();
+        mat0.map = texture0;
 
+        var kgeometry = new THREE.PlaneGeometry( 20, 20, 32 );
+        var plane = new THREE.Mesh( kgeometry, mat0 );
+        plane.position.y = -4;
+        scene.add( plane );
+
+        plane.rotation.x += 1.57;
 
         //hikouki
         var kitaiG = new THREE.CylinderGeometry(0.3,0.33,2,32);
@@ -89,22 +101,22 @@
 
 
 
-        // 木をスプライトで作成
+        // 雲をスプライトで作成
         var textureLoader = new THREE.TextureLoader();  
         var texture = textureLoader.load("kumo.png");
         const material = new THREE.SpriteMaterial({ map: texture,});
 
         // 森を作成
         for (let i = 0; i < 20; i++) {
-          const sprite = new THREE.Sprite(material);
-          // ランダムな座標に配置
-          sprite.position.x = 2 * (Math.random() - 0.5);
-          sprite.position.y = 0.5 * Math.random();
-          sprite.position.z = 2 * (Math.random() - 0.5);
-          // スケールを調整
-          sprite.scale.set(0.5, 0.5, 0.5);
+            const sprite = new THREE.Sprite(material);
+            // ランダムな座標に配置
+            sprite.position.x = 15 * (Math.random() - 0.5);
+            sprite.position.y = (5 * Math.random()) - 4;
+            sprite.position.z = 15 * (Math.random() - 0.5);
+            // スケールを調整
+            sprite.scale.set(1.2, 1, 1);
 
-          scene.add(sprite);
+            scene.add(sprite);
         }
         
         update();
@@ -116,6 +128,7 @@
           renderer.render(scene, camera);
           requestAnimationFrame(update);
         }
+    
       }
     </script>
 </body>
