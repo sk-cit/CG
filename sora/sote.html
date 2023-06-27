@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>sample2</title>
+
+  <!-- three.jsを読み込む(ローカル) -->
+  <!-- <script src="./three.js"></script> -->
+  <!-- three.jsを読み込む(CDN) -->
+  <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+
+</head>
+<body>
+ <script>
+  var init = function() {
+
+    var width = 800,
+        height = 600;
+  
+    // レンダラーを作成
+    var renderer = new THREE.WebGLRenderer();
+    document.body.appendChild(renderer.domElement);
+    renderer.setSize(width, height);
+    // 背景の色を設定
+    renderer.setClearColor(0x0067c0);
+  
+    // シーンを作成
+    var scene = new THREE.Scene();
+  
+    // カメラを作成
+    const camera = new THREE.PerspectiveCamera(45, width / height);
+    // カメラの初期座標を設定
+    camera.position.set(1, 1, 5);
+
+    // カメラコントローラーを作成
+    const controls = new THREE.OrbitControls(camera, document.body); 
+
+  
+    //sitakumo
+    var textureLoader = new THREE.TextureLoader();  
+    var texture = textureLoader.load("sora.jpg");
+    var sora = new THREE.MeshPhongMaterial();
+    sora.map = texture;
+
+    var geometry = new THREE.PlaneGeometry( 20, 20, 32 );
+    var material = new THREE.MeshPhongMaterial( {color: 0x0000ff, side: THREE.DoubleSide} );
+    var plane = new THREE.Mesh( geometry, sora );
+    plane.position.y = -4;
+    scene.add( plane );
+
+    plane.rotation.x += 1.57;
+
+
+    //hikouki
+    var kitaiG = new THREE.CylinderGeometry(0.3,0.33,2,32);
+    var kitaiM = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+    const kitai = new THREE.Mesh( kitaiG, kitaiM );
+    kitai.rotation.x += 1.57;
+
+    //maehane
+    var haneG = new THREE.BoxGeometry( 2.2, 0.1, 0.4 ); 
+    var haneM = new THREE.MeshBasicMaterial( {color: 0x797979} ); 
+    const hane = new THREE.Mesh( haneG, haneM ); 
+    hane.position.z = 0.4;
+
+    //usirohane
+    var shaneG = new THREE.BoxGeometry( 1.25, 0.1, 0.2 ); 
+    var shaneM = new THREE.MeshBasicMaterial( {color: 0x797978} );
+    const shane = new THREE.Mesh( shaneG, shaneM ); 
+    shane.position.z = -0.6;
+
+    //mae
+    var maeG = new THREE.CylinderGeometry( 0.15, 0.3, 0.2, 32 ); 
+    var mae = new THREE.Mesh( maeG, kitaiM );
+    mae.position.z = 1.1;
+    mae.rotation.x += 1.57;
+
+    const hikouki = new THREE.Group();
+    hikouki.add(kitai);
+    hikouki.add(hane);
+    hikouki.add(shane);
+    hikouki.add(mae);
+    hikouki.position.z = -7;
+    scene.add(hikouki);
+
+    var textureLoader = new THREE.TextureLoader();  
+    var texture = textureLoader.load("sora/kumo.png");
+    const kumomaterial = new THREE.SpriteMaterial({ map: texture,});
+
+    //kumo
+    for (let i = 0; i < 25; i++) {
+          const p = new THREE.Sprite(kumomaterial);
+          // ランダムな座標に配置
+          p.position.x = 15 * (Math.random() - 0.5);
+          p.position.y = (5 * Math.random()) - 4;
+          p.position.z = 15 * (Math.random() - 0.5);
+          // スケールを調整
+          p.scale.set(1.2, 1, 1);
+
+          scene.add(p);
+    }
+  
+    // 平行光源
+    var directionalLight = new THREE.DirectionalLight(0xffffff,5);
+    directionalLight.position.set(5, 5, 0);
+    directionalLight.rotation.x += 0.3;
+    // シーンに追加
+    scene.add(directionalLight);
+  
+    tick();
+        // 毎フレーム時に実行されるループイベントです
+    function tick() {
+          // レンダリング
+          renderer.render(scene, camera);
+          requestAnimationFrame(tick);
+    }
+    var update = function() {
+      requestAnimationFrame(update);
+      //hikouki idou
+      if(hikouki.position.z > 7){
+        hikouki.position.z = -7;
+      }
+      hikouki.position.z += 0.01;
+      // レンダリング
+      renderer.render(scene, camera);
+      //renderer.render(scene, camera);
+    };
+    update();
+  }
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
