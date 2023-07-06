@@ -3,3 +3,5 @@
 38 three/addons/libs/stats.module.js
 40 three/addons/controls/FirstPersonControls.js
 75 textures/water.jpg
+参考
+https://www.pentacreation.com/blog/2019/10/191021.html
