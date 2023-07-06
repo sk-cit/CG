@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+  </head>
+<body>
+ <h1>空を飛ぶ飛行機を作成</h1>
+ ビルボードを使って透明感のある雲を再現した。<br>
+ <script>
+      // ページの読み込みを待つ
+      window.addEventListener('DOMContentLoaded', init);
+
+      function init() {
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 20000 );
+				camera.position.y = 200;
+
+				clock = new THREE.Clock();
+
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color( 0xaaccff );
+				scene.fog = new THREE.FogExp2( 0xaaccff, 0.0007 );
+
+				geometry = new THREE.PlaneGeometry( 20000, 20000, worldWidth - 1, worldDepth - 1 );
+				geometry.rotateX( - Math.PI / 2 );
+
+				const position = geometry.attributes.position;
+				position.usage = THREE.DynamicDrawUsage;
+
+				for ( let i = 0; i < position.count; i ++ ) {
+
+					const y = 35 * Math.sin( i / 2 );
+					position.setY( i, y );
+
+				}
+
+				const texture = new THREE.TextureLoader().load( 'textures/water.jpg' );
+				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+				texture.repeat.set( 5, 5 );
+				texture.colorSpace = THREE.SRGBColorSpace;
+
+				material = new THREE.MeshBasicMaterial( { color: 0x0044ff, map: texture } );
+
+				mesh = new THREE.Mesh( geometry, material );
+				scene.add( mesh );
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.useLegacyLights = false;
+				document.body.appendChild( renderer.domElement );
+
+				controls = new FirstPersonControls( camera, renderer.domElement );
+
+				controls.movementSpeed = 500;
+				controls.lookSpeed = 0.1;
+
+				stats = new Stats();
+				document.body.appendChild( stats.dom );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize );
+      }
+      function onWindowResize() {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        controls.handleResize();
+
+}
+        
+        update();
+        
+
+        // 毎フレーム時に実行されるループイベントです
+        function update() {
+            // レンダリング
+            renderer.render(scene, camera);
+            requestAnimationFrame(update);
+
+            //飛行機の移動
+            if(hikouki.position.z > 7){
+                hikouki.position.z = -7;
+            }
+            hikouki.position.z += 0.01;
+        }
+    </script>
+</body>
