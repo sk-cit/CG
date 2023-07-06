@@ -46,19 +46,33 @@
         // シーンに追加
         scene.add(directionalLight2);
 
-	      var seaGeo=new THREE.PlaneGeometry(256,256,15,15);
-       for ( var i = 0, l = seaGeo.vertices.length; i < l; i ++ ) {
-		seaGeo.vertices[ i ].z = 5 * Math.sin( i / 2 );
-	}
-        var texture0 = THREE.ImageUtils.loadTexture( "textures/water.jpg" );
-		texture0.wrapS = texture0.wrapT = THREE.RepeatWrapping;
-		texture0.repeat.set( 2, 2 );
-        var seaMat = new THREE.MeshBasicMaterial( { color: 0x0074e8, map: texture0 } );
-        
-        sea=new THREE.Mesh( seaGeo, seaMat );
-        sea.rotateX(-Math.PI/2);
-sea.position.set(0, -30, 0);
-scene.add( sea );
+	//PlaneGeometry
+	const waterGeometry = new THREE.PlaneGeometry(1000,1000);
+ 
+	//Water
+	water = new Water(
+	    waterGeometry,
+	    {
+	        textureWidth: 512,
+	        textureHeight: 512,
+	        waterNormals: new THREE.TextureLoader().load( 'Water_1_M_Normal.jpg', function(texture){
+	            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	        } ),
+	        alpha: 1.0,
+	        waterColor: 0x3e89ce,
+	        distortionScale: 3.7,
+	        fog:scene.fog !== undefined
+	    }
+	);
+	 
+	//シーンに追加
+	scene.add(water);
+	water.rotation.x = - Math.PI / 2;
+ 
+function rendering(){
+    //アニメーション
+    water.material.uniforms['time'].value += 1.0 / 60.0;
+}
 
         //hikouki
         var kitaiG = new THREE.CylinderGeometry(0.3,0.33,2,32);
