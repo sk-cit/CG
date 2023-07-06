@@ -5,3 +5,4 @@
 75 textures/water.jpg
 参考
 https://www.pentacreation.com/blog/2019/10/191021.html
+https://threejs.org/examples/?q=ocean#webgl_shaders_ocean
