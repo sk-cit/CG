@@ -12,66 +12,106 @@
       window.addEventListener('DOMContentLoaded', init);
 
       function init() {
-        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 20000 );
-				camera.position.y = 200;
+        // サイズを指定
+        const width = 800
+        const height = 600;
 
-				clock = new THREE.Clock();
+        // レンダラーを作成
+        var renderer = new THREE.WebGLRenderer();
+        document.body.appendChild(renderer.domElement);
+        renderer.setSize(width, height);
+        // 背景の色を設定
+        renderer.setClearColor(0x0067c0);
 
-				scene = new THREE.Scene();
-				scene.background = new THREE.Color( 0xaaccff );
-				scene.fog = new THREE.FogExp2( 0xaaccff, 0.0007 );
 
-				geometry = new THREE.PlaneGeometry( 20000, 20000, worldWidth - 1, worldDepth - 1 );
-				geometry.rotateX( - Math.PI / 2 );
+        // シーンを作成
+        const scene = new THREE.Scene();
 
-				const position = geometry.attributes.position;
-				position.usage = THREE.DynamicDrawUsage;
+        // カメラを作成
+        const camera = new THREE.PerspectiveCamera(45, width / height);
+        // カメラの初期座標を設定
+        camera.position.set(1, 1, 5);
 
-				for ( let i = 0; i < position.count; i ++ ) {
+        // カメラコントローラーを作成
+        const controls = new THREE.OrbitControls(camera, document.body); 
+        
+        // 平行光源1
+        var directionalLight1 = new THREE.DirectionalLight(0xffffff);
+        directionalLight1.position.set(10, 10, 10);
+        // シーンに追加
+        scene.add(directionalLight1);
+        // 平行光源2
+        var directionalLight2 = new THREE.DirectionalLight(0x888888);
+        directionalLight2.position.set(-10, -10, 10);
+        // シーンに追加
+        scene.add(directionalLight2);
 
-					const y = 35 * Math.sin( i / 2 );
-					position.setY( i, y );
+	      var seaGeo=new THREE.PlaneGeometry(256,256,15,15);
+       for ( var i = 0, l = seaGeo.vertices.length; i < l; i ++ ) {
+		seaGeo.vertices[ i ].z = 5 * Math.sin( i / 2 );
+	}
+        var texture0 = THREE.ImageUtils.loadTexture( "textures/water.jpg" );
+		texture0.wrapS = texture0.wrapT = THREE.RepeatWrapping;
+		texture0.repeat.set( 2, 2 );
+        var seaMat = new THREE.MeshBasicMaterial( { color: 0x0074e8, map: texture0 } );
+        
+        sea=new THREE.Mesh( seaGeo, seaMat );
+        sea.rotateX(-Math.PI/2);
+sea.position.set(0, -30, 0);
+scene.add( sea );
 
-				}
+        //hikouki
+        var kitaiG = new THREE.CylinderGeometry(0.3,0.33,2,32);
+        var kitaiM = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+        const kitai = new THREE.Mesh( kitaiG, kitaiM );
+        kitai.rotation.x += 1.57;
 
-				const texture = new THREE.TextureLoader().load( 'textures/water.jpg' );
-				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-				texture.repeat.set( 5, 5 );
-				texture.colorSpace = THREE.SRGBColorSpace;
+        //maehane
+        var haneG = new THREE.BoxGeometry( 2.2, 0.1, 0.4 ); 
+        var haneM = new THREE.MeshBasicMaterial( {color: 0x797979} ); 
+        const hane = new THREE.Mesh( haneG, haneM ); 
+        hane.position.z = 0.4;
 
-				material = new THREE.MeshBasicMaterial( { color: 0x0044ff, map: texture } );
+        //usirohane
+        var shaneG = new THREE.BoxGeometry( 1.25, 0.1, 0.2 ); 
+        var shaneM = new THREE.MeshBasicMaterial( {color: 0x797978} );
+        const shane = new THREE.Mesh( shaneG, shaneM ); 
+        shane.position.z = -0.6;
 
-				mesh = new THREE.Mesh( geometry, material );
-				scene.add( mesh );
+        //mae
+        var maeG = new THREE.CylinderGeometry( 0.15, 0.3, 0.2, 32 ); 
+        var mae = new THREE.Mesh( maeG, kitaiM );
+        mae.position.z = 1.1;
+        mae.rotation.x += 1.57;
 
-				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.useLegacyLights = false;
-				document.body.appendChild( renderer.domElement );
+        const hikouki = new THREE.Group();
+        hikouki.add(kitai);
+        hikouki.add(hane);
+        hikouki.add(shane);
+        hikouki.add(mae);
+        hikouki.position.z = -7;
+        scene.add(hikouki);
 
-				controls = new FirstPersonControls( camera, renderer.domElement );
 
-				controls.movementSpeed = 500;
-				controls.lookSpeed = 0.1;
 
-				stats = new Stats();
-				document.body.appendChild( stats.dom );
 
-				//
+        // 雲をスプライトで作成
+        var textureLoader = new THREE.TextureLoader();  
+        var texture = textureLoader.load("kumo.png");
+        const material = new THREE.SpriteMaterial({ map: texture,});
 
-				window.addEventListener( 'resize', onWindowResize );
-      }
-      function onWindowResize() {
+        // 雲を作成
+        for (let i = 0; i < 40; i++) {
+            const sprite = new THREE.Sprite(material);
+            // ランダムな座標に配置
+            sprite.position.x = 15 * (Math.random() - 0.5);
+            sprite.position.y = (5 * Math.random()) - 4;
+            sprite.position.z = 15 * (Math.random() - 0.5);
+            // スケールを調整
+            sprite.scale.set(2, 1.5, 1);
 
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-
-        renderer.setSize( window.innerWidth, window.innerHeight );
-
-        controls.handleResize();
-
-}
+            scene.add(sprite);
+        }
         
         update();
         
@@ -87,6 +127,13 @@
                 hikouki.position.z = -7;
             }
             hikouki.position.z += 0.01;
+		var time = clock.getElapsedTime() * 10;
+for ( var i = 0, l = sea.geometry.vertices.length; i < l; i ++ ) {
+	sea.geometry.vertices[ i ].z = 5 * Math.sin( i / 5 + ( time + i ) / 7 );
+    }
+        sea.geometry.verticesNeedUpdate = true;
         }
+    
+      }
     </script>
 </body>
