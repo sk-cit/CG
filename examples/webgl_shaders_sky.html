@@ -118,6 +118,77 @@
 				controls.enableZoom = false;
 				controls.enablePan = false;
 
+				  //hikouki
+        var kitaiG = new THREE.CylinderGeometry(0.3,0.33,2,32);
+        var kitaiM = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+        const kitai = new THREE.Mesh( kitaiG, kitaiM );
+        kitai.rotation.x += 1.57;
+
+        //maehane
+        var haneG = new THREE.BoxGeometry( 2.2, 0.1, 0.4 ); 
+        var haneM = new THREE.MeshBasicMaterial( {color: 0x797979} ); 
+        const hane = new THREE.Mesh( haneG, haneM ); 
+        hane.position.z = 0.4;
+
+        //usirohane
+        var shaneG = new THREE.BoxGeometry( 1.25, 0.1, 0.2 ); 
+        var shaneM = new THREE.MeshBasicMaterial( {color: 0x797978} );
+        const shane = new THREE.Mesh( shaneG, shaneM ); 
+        shane.position.z = -0.6;
+
+        //mae
+        var maeG = new THREE.CylinderGeometry( 0.15, 0.3, 0.2, 32 ); 
+        var mae = new THREE.Mesh( maeG, kitaiM );
+        mae.position.z = 1.1;
+        mae.rotation.x += 1.57;
+
+        const hikouki = new THREE.Group();
+        hikouki.add(kitai);
+        hikouki.add(hane);
+        hikouki.add(shane);
+        hikouki.add(mae);
+        hikouki.position.z = -7;
+        scene.add(hikouki);
+
+
+
+
+        // 雲をスプライトで作成
+        var textureLoader = new THREE.TextureLoader();  
+        var texture = textureLoader.load("kumo.png");
+        const material = new THREE.SpriteMaterial({ map: texture,});
+
+        // 雲を作成
+        for (let i = 0; i < 40; i++) {
+            const sprite = new THREE.Sprite(material);
+            // ランダムな座標に配置
+            sprite.position.x = 15 * (Math.random() - 0.5);
+            sprite.position.y = (5 * Math.random()) - 4;
+            sprite.position.z = 15 * (Math.random() - 0.5);
+            // スケールを調整
+            sprite.scale.set(2, 1.5, 1);
+
+            scene.add(sprite);
+        }
+        
+        update();
+        
+
+        // 毎フレーム時に実行されるループイベントです
+        function update() {
+            // レンダリング
+            renderer.render(scene, camera);
+            requestAnimationFrame(update);
+
+            //飛行機の移動
+            if(hikouki.position.z > 7){
+                hikouki.position.z = -7;
+            }
+            hikouki.position.z += 0.01;
+        }
+    
+      }
+
 				initSky();
 
 				window.addEventListener( 'resize', onWindowResize );
