@@ -104,6 +104,44 @@
 				const helper = new THREE.GridHelper( 10000, 2, 0xffffff, 0xffffff );
 				scene.add( helper );
 
+				//追加
+				//hikouki
+			        var kitaiG = new THREE.CylinderGeometry(0.3,0.33,2,32);
+			        var kitaiM = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+			        const kitai = new THREE.Mesh( kitaiG, kitaiM );
+			        kitai.rotation.x += 1.57;
+			
+			        //maehane
+			        var haneG = new THREE.BoxGeometry( 2.2, 0.1, 0.4 ); 
+			        var haneM = new THREE.MeshBasicMaterial( {color: 0x797979} ); 
+			        const hane = new THREE.Mesh( haneG, haneM ); 
+			        hane.position.z = 0.4;
+			
+			        //usirohane
+			        var shaneG = new THREE.BoxGeometry( 1.25, 0.1, 0.2 ); 
+			        var shaneM = new THREE.MeshBasicMaterial( {color: 0x797978} );
+			        const shane = new THREE.Mesh( shaneG, shaneM ); 
+			        shane.position.z = -0.6;
+			
+			        //mae
+			        var maeG = new THREE.CylinderGeometry( 0.15, 0.3, 0.2, 32 ); 
+			        var mae = new THREE.Mesh( maeG, kitaiM );
+			        mae.position.z = 1.1;
+			        mae.rotation.x += 1.57;
+			
+			        const hikouki = new THREE.Group();
+			        hikouki.add(kitai);
+			        hikouki.add(hane);
+			        hikouki.add(shane);
+			        hikouki.add(mae);
+			        hikouki.position.set( 0, 100, 2000 );
+			        scene.add(hikouki);
+
+
+
+
+				
+
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
