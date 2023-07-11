@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - shaders - sky sun shader</title>
+		<title>three.js sky</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
 	</head>
 	<body>
-
-		<div id="info"><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgl - sky + sun shader
+		<div id="info">
+			three.jsのサンプルコードに空と太陽を表現したものがあったので、<a href="https://sk-cit.github.io/CG/sora/soraa.html" target="_blank" rel="noopener">前回の提出した課題</a>
+			と組み合わせました。<br>
+			また、前回との変更点として雲のサイズをランダムにしました。
 		</div>
 
 		<!-- Import maps polyfill -->
@@ -97,37 +99,36 @@
 			function init() {
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 100, 2000000 );
-				camera.position.set( 0, 100, 2000 );
+				camera.position.set( 1000, 100, 2000 );
 
 				scene = new THREE.Scene();
 
-				const helper = new THREE.GridHelper( 10000, 2, 0xffffff, 0xffffff );
-				scene.add( helper );
+				//const helper = new THREE.GridHelper( 10000, 2, 0xffffff, 0xffffff );
+				//scene.add( helper );
 
 				//追加
 				//hikouki
-				var kitaiG = new THREE.CylinderGeometry(300,330,200,32);
-			        //var kitaiG = new THREE.CylinderGeometry(0.3,0.33,2,32);
+					var kitaiG = new THREE.CylinderGeometry(0.3*500,0.33*500,2*500,32);
 			        var kitaiM = new THREE.MeshBasicMaterial( {color: 0xffffff} );
 			        const kitai = new THREE.Mesh( kitaiG, kitaiM );
 			        kitai.rotation.x += 1.57;
 			
 			        //maehane
-			        var haneG = new THREE.BoxGeometry( 2.2, 0.1, 0.4 ); 
+			        var haneG = new THREE.BoxGeometry( 2.2*500, 0.1*500, 0.4*500 ); 
 			        var haneM = new THREE.MeshBasicMaterial( {color: 0x797979} ); 
 			        const hane = new THREE.Mesh( haneG, haneM ); 
-			        hane.position.z = 0.4;
+			        hane.position.z = 0.4*500;
 			
 			        //usirohane
-			        var shaneG = new THREE.BoxGeometry( 1.25, 0.1, 0.2 ); 
+			        var shaneG = new THREE.BoxGeometry( 1.25*500, 0.1*500, 0.2*500 ); 
 			        var shaneM = new THREE.MeshBasicMaterial( {color: 0x797978} );
 			        const shane = new THREE.Mesh( shaneG, shaneM ); 
-			        shane.position.z = -0.6;
+			        shane.position.z = -0.6*500;
 			
 			        //mae
-			        var maeG = new THREE.CylinderGeometry( 0.15, 0.3, 0.2, 32 ); 
+			        var maeG = new THREE.CylinderGeometry( 0.15*500, 0.3*500, 0.2*500, 32 ); 
 			        var mae = new THREE.Mesh( maeG, kitaiM );
-			        mae.position.z = 1.1;
+			        mae.position.z = 1.1*500;
 			        mae.rotation.x += 1.57;
 			
 			        const hikouki = new THREE.Group();
@@ -135,9 +136,29 @@
 			        hikouki.add(hane);
 			        hikouki.add(shane);
 			        hikouki.add(mae);
-			        hikouki.position.set( 5, 105, 2010 );
+			        hikouki.position.set( 0, 100-500, 2000-1700 );
+					hikouki.rotation.y += 1.57;
 			        scene.add(hikouki);
 
+					 // 雲をスプライトで作成
+					 var textureLoader = new THREE.TextureLoader();  
+					var texture = textureLoader.load("kumo.png");
+					const material = new THREE.SpriteMaterial({ map: texture,});
+
+					// 雲を作成
+					for (let i = 0; i < 100; i++) {
+						const sprite = new THREE.Sprite(material);
+						// ランダムな座標に配置
+						sprite.position.x = (30 * (Math.random() - 0.5))*1000;
+						sprite.position.y = ((5 * Math.random()) - 4)*1000+100;
+						sprite.position.z = (30 * (Math.random() - 0.5))*1000+2000;
+						// スケールを調整
+						let rando = Math.random()+0.5;
+						sprite.scale.set(2*1000*rando, 1.5*1000*rando, 1*1000*rando);
+
+						scene.add(sprite);
+					}
+					
 
 
 
@@ -154,14 +175,30 @@
 				const controls = new OrbitControls( camera, renderer.domElement );
 				controls.addEventListener( 'change', render );
 				//controls.maxPolarAngle = Math.PI / 2;
-				controls.enableZoom = false;
-				controls.enablePan = false;
+				//controls.enableZoom = false;
+				//controls.enablePan = false;
 
 				initSky();
 
-				window.addEventListener( 'resize', onWindowResize );
 
-			}
+				window.addEventListener( 'resize', onWindowResize );
+				update();
+        
+
+        // 毎フレーム時に実行されるループイベントです
+        function update() {
+            // レンダリング
+            renderer.render(scene, camera);
+            requestAnimationFrame(update);
+
+            //飛行機の移動
+            if(hikouki.position.x > 5000){
+                hikouki.position.x = -5000;
+            }
+            hikouki.position.x += 50;
+           }    
+       }
+				
 
 			function onWindowResize() {
 
